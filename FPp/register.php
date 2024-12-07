@@ -1,31 +1,45 @@
 <?php
-require "fungsi/db.php"; // Koneksi ke database
+include ('fungsi/db.php'); // Pastikan ini mengarah ke file koneksi database
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Ambil data dari form
     $nama_lengkap = $_POST['nama_lengkap'];
     $email = $_POST['email'];
     $username = $_POST['username'];
-    $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
-    $role = 'user'; // Default role
+    $password = $_POST['password'];
 
-    // Cek apakah email atau username sudah digunakan
-    $check_query = $conn->prepare("SELECT * FROM akun WHERE email = ? OR nama_pengguna = ?");
-    $check_query->bind_param("ss", $email, $username);
-    $check_query->execute();
-    $result = $check_query->get_result();
+    // Enkripsi password
+    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+    // Cek apakah username atau email sudah ada
+    $query = "SELECT * FROM akun WHERE email = ? OR nama_pengguna = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ss", $email, $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        $error = "Email atau username sudah digunakan.";
+        // Jika sudah ada, beri pesan error
+        $error = "Username atau email sudah digunakan.";
     } else {
-        // Masukkan data ke dalam tabel
-        $sql = "INSERT INTO akun (nama_pengguna, email, kata_sandi, peran) VALUES (?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssss", $username, $email, $password, $role);
+        // Masukkan data ke tabel akun
+        $query = "INSERT INTO akun (nama_pengguna, email, kata_sandi, peran) VALUES (?, ?, ?, 'pelanggan')";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("sss", $username, $email, $password_hash);
+        $stmt->execute();
 
+        // Ambil id_akun yang baru saja dibuat
+        $id_akun = $stmt->insert_id;
+
+        // Masukkan data ke tabel pelanggan
+        $query = "INSERT INTO pelanggan (id_akun, nama_lengkap) VALUES (?, ?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("is", $id_akun, $nama_lengkap);
         if ($stmt->execute()) {
-            $success = "Registrasi berhasil!";
+            $success = true;
+            header('Location: login.php');
         } else {
-            $error = "Terjadi kesalahan: " . $conn->error;
+            $error = "Gagal menyimpan data pelanggan.";
         }
     }
 }
@@ -33,116 +47,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register</title>
-
+  <title>Landing Page</title>
+  <link rel="stylesheet" href="css/style.css">
   <link rel="icon" type="image/png" href="img/favicon.png">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/cyborg/bootstrap.min.css"
     integrity="sha384-nEnU7Ae+3lD52AK+RGNzgieBWMnEfgTbRHIwEvp1XXPdqdO6uLTd/NwXbzboqjc2" crossorigin="anonymous">
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
     integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-  <style>
-    body {
-      background-color: #ffffff;
-      background-image: url('img/KonoSuba Season 3.jpeg');
-      background-size: cover;
-      background-repeat: no-repeat;
-      color: #4B569F;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-family: Arial, sans-serif;
-    }
-
-    .navbar {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 2000;
-      background-color: #4B569F;
-    }
-
-    .navbar-brand,
-    .navbar-nav .nav-link {
-      color: #ffffff !important;
-    }
-
-    .registrasi-container {
-      border-radius: 20px;
-      background-color: #ffffff;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-      padding: 20px;
-      color: #ffffff;
-    }
-
-    .container {
-      padding-top: 100px;
-    }
-
-    .form-group label {
-      color: #4B569F;
-    }
-    .text-center{
-      color: #4B569F;
-    }
-
-    .form-control{
-      background-color: #ffffff;
-      border: 2px solid #4B569F;
-    }
-
-    .card {
-      background-color: #ffffff;
-      border: 2px solid #4B569F;
-    }
-
-    .card-header {
-      background-color: #4B569F;
-      color: #ffffff;
-    }
-
-    .btn-primary {
-      background-color: #4B569F;
-      border: none;
-    }
-
-    .btn-primary:hover {
-      background-color: #3E4687;
-    }
-
-    .btn-success{
-      background-color: #4B569F;
-      border: none;
-    }
-
-    .btn-success:hover {
-      background-color: #3E4687;
-    }
-
-    .social-icons a {
-      color: #4B569F;
-      font-size: 18px;
-    }
-
-    .social-icons a:hover {
-      color: #3E4687;
-    }
-
-  </style>
 </head>
-
 <body>
-
-  <!-- Alert Scripts -->
   <?php if (isset($success) && $success): ?>
     <script>
       Swal.fire({
@@ -162,23 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </script>
   <?php endif; ?>
 
-  <nav class="navbar navbar-expand-lg navbar-dark">
-    <a class="navbar-brand" href="#"><i class="fa-solid fa-"></i> BUROQ TRANSPORT</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="index.php"><i class="fas fa-house"></i> Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="login.php"><i class="fas fa-sign-in"></i> login</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-lg-8">
@@ -210,7 +110,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button type="submit" class="btn btn-primary w-100">Register</button>
               </form>
               <div class="text-center mt-3">
-                <p>Sudah memiliki akun? <b><a href="login.php" class="btn btn-success">Login</a></b></p>
+                <p>Sudah memiliki akun? <b><a href="login.php" class="btn btn-primary">Login</a></b></p>
+                <b><a href="index.php" class="btn btn-primary">kembali</a></b>
               </div>
             </div>
           </div>
@@ -218,20 +119,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
     </div>
   </div>
-  <div class="container text-center py-5 mt-5">
-    <p class="mb-0">&copy; 2024 Buroq Transport. All Rights Reserved.</p>
-    <div class="social-icons mt-3">
-      <a href="https://web.facebook.com/syandila.syandila.56/" class="mx-2"><i class="fab fa-facebook-f"></i></a>
-      <a href="#" class="mx-2"><i class="fab fa-twitter"></i></a>
-      <a href="#" class="mx-2"><i class="fab fa-instagram"></i></a>
-      <a href="https://www.tiktok.com/@albedo1128?lang=id-ID" class="mx-2"><i class="fab fa-tiktok"></i></a>
-    </div>
-  </div>
+
+  <?php include('includes/footer.php'); ?>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-
 </html>
-
