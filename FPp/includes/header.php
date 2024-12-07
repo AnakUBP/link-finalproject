@@ -36,7 +36,7 @@
                 <a class="nav-link" href="profile.php"><i class="fas fa-user"></i> Profile</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                <a class="nav-link" href="./logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </li>
         </ul>
     </div>
