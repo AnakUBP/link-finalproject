@@ -12,7 +12,7 @@
 </head>
 
     <footer>
-        <div class="footer text-center py-5 mt-5">
+        <div class="container text-center py-5 mt-5">
             <p class="mb-0">&copy; 2024 Buroq Transport. All Rights Reserved.</p>
             <div class="social-icons mt-3">
             <a href="https://web.facebook.com/syandila.syandila.56/" class="mx-2"><i class="fab fa-facebook-f"></i></a>

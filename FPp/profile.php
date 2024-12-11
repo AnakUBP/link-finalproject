@@ -3,7 +3,7 @@ session_start();
 include 'fungsi/db.php';
 
 if (!isset($_SESSION['id_akun'])) {
-    header("Location: login.php");
+    header(header: "Location: login.php");
     exit();
 }
 

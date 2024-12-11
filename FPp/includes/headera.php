@@ -15,7 +15,7 @@
 </head>
 
 <header>
-  <nav class="navbar navbar-expand-lg navbar-dark">
+  <nav class="navbar navbar-expand-lg navbar">
     <a class="navbar-brand" href="index.php"><i class="fas fa-car"></i> BUROQ TRANSPORT</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,7 +30,7 @@
             <a class="nav-link" href="#"><i class="fas fa-info-circle"></i> About</a>
             </li>
             <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fas fa-calendar"></i> Booking</a>
+            <a class="nav-link" href="booking.php"><i class="fas fa-calendar"></i> Booking</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="login.php"><i class="fas fa-user-edit"></i> Login</a>

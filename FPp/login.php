@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Query untuk mencari akun berdasarkan username atau email
     $sql = "SELECT * FROM akun WHERE email='$username_or_email' OR nama_pengguna='$username_or_email'";
     $result = $conn->query($sql);
-    
+
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         
@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $conn->query($update_sql);
 
             // Arahkan ke dashboard setelah login berhasil
-            header("Location: dashboard.php");
+            header("Location: index.php");
             exit();
         } else {
             $error = "Kata sandi salah!";

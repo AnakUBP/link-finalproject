@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +29,7 @@
             <a class="nav-link" href="#"><i class="fas fa-info-circle"></i> About</a>
             </li>
             <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fas fa-calendar"></i> Booking</a>
+            <a class="nav-link" href="booking.php"><i class="fas fa-calendar"></i> Booking</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="profile.php"><i class="fas fa-user"></i> Profile</a>
