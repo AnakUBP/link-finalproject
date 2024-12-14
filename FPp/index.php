@@ -1,3 +1,7 @@
+<?php
+session_start();
+include 'fungsi/db.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,14 +18,6 @@
     crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-  <?php
-    if (!isset($_SESSION['id_akun'])) {
-      include ('includes/header.php');
-    }
-    else {
-      include ('includes/headera.php');
-    }
-  ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,7 +29,6 @@
 </head>
 <body>
   <?php
-      session_start(); // Pastikan session dimulai
       if (!isset($_SESSION['id_akun'])) {
         include('includes/headera.php');
     ?>
@@ -46,11 +41,66 @@
             <a href="register.php" class="btn btn-secondary">Daftar</a>
           </div>
         </div>
-    <?php
+  <?php
       } else {
         include('includes/header.php');
-      }
+        include 'fungsi/db.php';
+        $id_akun = $_SESSION['id_akun'];
+
+        // Ambil data akun dan profil pelanggan
+        $sql = "SELECT * FROM akun JOIN pelanggan ON akun.id_akun = pelanggan.id_akun WHERE akun.id_akun = '$id_akun'";
+        $result = $conn->query($sql);
+        $user = $result->fetch_assoc();
+
+        // Ambil riwayat pemesanan
+        $sql_pemesanan = "SELECT * FROM rental_pemesanan WHERE id_pelanggan = '$id_akun' ORDER BY tanggal_pemesanan DESC";
+        $result_pemesanan = $conn->query($sql_pemesanan);
     ?>
+        <div class="container mb-5">
+          <h2>Hello <?php echo $user['nama_pengguna']; ?></h2>
+        </div>
+        <div class="col-8">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="text-center">Riwayat Pemesanan</h5> 
+                </div>
+                <div class="card-body">
+                  <?php if ($result_pemesanan->num_rows > 0): ?>
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>No.</th>
+                        <th>Tanggal Pemesanan</th>
+                        <th>Mobil</th>
+                        <th>Status Pembayaran</th>
+                        <th>Status Pemesanan</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                <?php $no = 1; ?>
+                <?php while ($pemesanan = $result_pemesanan->fetch_assoc()): ?>
+                <tr>
+                  <td><?php echo $no++; ?></td>
+                  <td><?php echo $pemesanan['tanggal_pemesanan']; ?></td>
+                  <td><?php echo $pemesanan['mobil']; ?></td>
+                  <td><?php echo $pemesanan['status_pembayaran']; ?></td>
+                  <td><?php echo $pemesanan['status_pemesanan']; ?></td>
+                </tr>
+                <?php endwhile; ?>
+              </tbody>
+            </table>
+            <?php else: ?>
+              <p>Tidak ada riwayat pemesanan.</p>
+            <?php endif; ?>
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-2">
+          <a href="buat_pemesanan.php" class="btn btn-primary">Buat Pemesanan Baru</a>
+        </div>
+      <?php
+      }
+      ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
@@ -76,7 +126,7 @@
     </div>
   </div>
   <?php
-  include ('includes/cardsection.php')
+  include ('includes/footer.php')
   ?>
 </body>
 </html>

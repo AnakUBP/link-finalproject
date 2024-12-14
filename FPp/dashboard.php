@@ -3,7 +3,7 @@ session_start();
 include 'fungsi/db.php';
 
 if (!isset($_SESSION['id_akun'])) {
-    header(header: "Location: login.php");
+    header("Location: login.php");
     exit();
 }
 
@@ -50,7 +50,7 @@ $result_pemesanan = $conn->query($sql_pemesanan);
             <p><strong>Nama Lengkap:</strong> <?php echo $user['nama_lengkap']; ?></p>
             <p><strong>Email:</strong> <?php echo $user['email']; ?></p>
             <p><strong>Alamat:</strong> <?php echo $user['alamat']; ?></p>
-            <p><strong>No. Telepon:</strong> <?php echo $user['no_telepon']; ?></p>
+            <p><strong>No. Telepon:</strong> <?php echo $user['kontak']; ?></p>
           </div>
         </div>
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 06, 2024 at 10:40 AM
+-- Generation Time: Dec 12, 2024 at 04:41 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,7 +29,8 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `admin` (
   `id_admin` int(11) NOT NULL,
-  `id_akun` int(11) NOT NULL
+  `id_akun` int(11) NOT NULL,
+  `jabatan` varchar(52) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -70,10 +71,10 @@ CREATE TABLE `kategori_mobil` (
 CREATE TABLE `list_pemesanan` (
   `id_list` int(11) NOT NULL,
   `id_pemesanan` int(11) NOT NULL,
-  `id_supir` int(11) DEFAULT NULL,
+  `id_supir` int(11) NOT NULL,
   `pembayaran` decimal(12,2) DEFAULT NULL,
   `bukti_pembayaran` varchar(255) DEFAULT NULL,
-  `status` enum('belum bayar','sudah bayar','proses rental','selesai') DEFAULT 'belum bayar'
+  `status` enum('belum bayar','sudah bayar') DEFAULT 'belum bayar'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -112,6 +113,21 @@ CREATE TABLE `pelanggan` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `presensi`
+--
+
+CREATE TABLE `presensi` (
+  `id_presensi` int(11) NOT NULL,
+  `id_akun` int(11) NOT NULL,
+  `tanggal` date NOT NULL,
+  `status` enum('hadir','absen','izin') DEFAULT 'absen',
+  `waktu_masuk` time DEFAULT NULL,
+  `waktu_keluar` time DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `rental_pemesanan`
 --
 
@@ -136,8 +152,7 @@ CREATE TABLE `staf` (
   `id_staf` int(11) NOT NULL,
   `id_akun` int(11) NOT NULL,
   `jabatan` varchar(50) NOT NULL,
-  `shift` enum('pagi','siang','malam') NOT NULL,
-  `status` enum('hadir','absen') DEFAULT 'hadir'
+  `shift` enum('pagi','siang','malam') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -202,6 +217,13 @@ ALTER TABLE `pelanggan`
   ADD UNIQUE KEY `id_akun` (`id_akun`);
 
 --
+-- Indexes for table `presensi`
+--
+ALTER TABLE `presensi`
+  ADD PRIMARY KEY (`id_presensi`),
+  ADD KEY `id_akun` (`id_akun`);
+
+--
 -- Indexes for table `rental_pemesanan`
 --
 ALTER TABLE `rental_pemesanan`
@@ -264,6 +286,12 @@ ALTER TABLE `pelanggan`
   MODIFY `id_pelanggan` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `presensi`
+--
+ALTER TABLE `presensi`
+  MODIFY `id_presensi` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `rental_pemesanan`
 --
 ALTER TABLE `rental_pemesanan`
@@ -309,6 +337,12 @@ ALTER TABLE `mobil`
 --
 ALTER TABLE `pelanggan`
   ADD CONSTRAINT `pelanggan_ibfk_1` FOREIGN KEY (`id_akun`) REFERENCES `akun` (`id_akun`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `presensi`
+--
+ALTER TABLE `presensi`
+  ADD CONSTRAINT `presensi_ibfk_1` FOREIGN KEY (`id_akun`) REFERENCES `akun` (`id_akun`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `rental_pemesanan`

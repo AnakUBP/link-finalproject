@@ -54,6 +54,11 @@ h2 {
     color: #ffffff !important;
 }
 
+.navbar button {
+    color: #ffffff;
+}
+
+
 .form-control {
     background-color: #ffffff;
     border: 2px solid #4B569F;
