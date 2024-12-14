@@ -1,7 +1,10 @@
+<<<<<<< HEAD
 <?php
 session_start();
 include 'fungsi/db.php';
 ?>
+=======
+>>>>>>> 830e21f5521c5a59580ebed3ffa2ab4902b6231f
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,6 +21,12 @@ include 'fungsi/db.php';
     crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
+<<<<<<< HEAD
+=======
+  <?php
+  include ('includes/headera.php')
+  ?>
+>>>>>>> 830e21f5521c5a59580ebed3ffa2ab4902b6231f
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,6 +37,7 @@ include 'fungsi/db.php';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+<<<<<<< HEAD
   <?php
       if (!isset($_SESSION['id_akun'])) {
         include('includes/headera.php');
@@ -101,6 +111,19 @@ include 'fungsi/db.php';
       <?php
       }
       ?>
+=======
+    <div class="box">
+        <h1 class="text-center mt-5">Selamat Datang di Buroq Rental Mobil</h1>
+        <p class="text-center mt-3 mb-4">Silakan login atau daftar untuk menggunakan layanan kami.</p>
+
+        <div class="d-flex justify-content-center gap-4">
+            <a href="login.php" class="btn btn-primary">Login</a>
+            <a href="register.php" class="btn btn-secondary">Daftar</a>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+>>>>>>> 830e21f5521c5a59580ebed3ffa2ab4902b6231f
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
@@ -125,6 +148,47 @@ include 'fungsi/db.php';
       </div>
     </div>
   </div>
+<<<<<<< HEAD
+=======
+
+  <!-- Card Section -->
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="card mb-4">
+          <img src="img/suzuki carry.jpg" class="card-img-top" alt="gambar pretama">
+          <div class="card-body">
+            <h5 class="card-title"><i class="fas fa-car"></i> Suzuki carry</h5>
+            <p class="card-text">pick-up</p>
+            <a href="#" class="btn alert-primary"><i class="fas fa-arrow-right"></i> Lihat lebih lanjut</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card mb-4">
+          <img src="img/xpander.jpg" class="card-img-top" alt="gambar ke 2">
+          <div class="card-body">
+            <h5 class="card-title"><i class="fas fa-car"></i> Mitsubishi xpander</h5>
+            <p class="card-text">mobil pribadi</p>
+            <a href="#" class="btn alert-warning"><i class="fas fa-arrow-right"></i> Lihat lebih lanjut</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card mb-4">
+          <img src="img/KonoSuba Season 3.jpeg" class="card-img-top" alt="gambar ke 3">
+          <div class="card-body">
+            <h5 class="card-title"><i class="fas fa-cogs"></i> Service 3</h5>
+            <p class="card-text">We offer tailored service 3 for your specific needs.</p>
+            <a href="#" class="btn alert-warning"><i class="fas fa-arrow-right"></i> Learn More</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<body>
+>>>>>>> 830e21f5521c5a59580ebed3ffa2ab4902b6231f
   <?php
   include ('includes/footer.php')
   ?>
