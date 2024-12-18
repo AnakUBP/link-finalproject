@@ -71,9 +71,16 @@ CREATE TABLE `kategori_mobil` (
 CREATE TABLE `list_pemesanan` (
   `id_list` int(11) NOT NULL,
   `id_pemesanan` int(11) NOT NULL,
+<<<<<<< HEAD
   `id_supir` int(11) NULL,
   `bukti_pembayaran` varchar(255) DEFAULT NULL,
   `status` enum('belum bayar','sudah bayar','sedang berlangsung','selesai','batal') DEFAULT 'belum bayar'
+=======
+  `id_supir` int(11) NOT NULL,
+  `pembayaran` decimal(12,2) DEFAULT NULL,
+  `bukti_pembayaran` varchar(255) DEFAULT NULL,
+  `status` enum('belum bayar','sudah bayar') DEFAULT 'belum bayar'
+>>>>>>> b07d64b6520380276b58935ac621741b881eebfa
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
