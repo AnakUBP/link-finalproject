@@ -14,7 +14,7 @@
 </head>
 
 <header>
-  <nav class="navbar navbar-expand-lg navbar-dark">
+  <nav class="navbar navbar-expand-lg">
     <a class="navbar-brand" href="index.php"><i class="fas fa-car"></i> BUROQ TRANSPORT</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

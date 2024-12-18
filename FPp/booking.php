@@ -1,14 +1,6 @@
 <?php
-include('fungsi/db.php'); // Koneksi database
-?>
-<?php
 session_start();
 include 'fungsi/db.php';
-
-if (!isset($_SESSION['id_akun'])) {
-    header("Location: login.php");
-    exit();
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,8 +14,13 @@ if (!isset($_SESSION['id_akun'])) {
 </head>
 <body>
     <!-- Header -->
-    <?php include('includes/header.php'); ?>
-
+    <?php
+      if (!isset($_SESSION['id_akun'])) {
+        include('includes/headera.php');
+    } else {
+        include('includes/header.php');
+    }
+    ?>
     <div class="container ">
         <h1 class="text-center">Booking Mobil</h1>
         <p class="text-center">Pilih mobil yang Anda inginkan dan lakukan pemesanan.</p>

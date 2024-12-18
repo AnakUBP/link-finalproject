@@ -1,0 +1,55 @@
+body {
+    background-color: whitesmoke;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+}
+
+.booking-container {
+    background-color: whitesmoke;
+    margin: 20px auto;
+    max-width: 80%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.card img {
+    max-height: 300px;
+    max-width: 250px;
+    object-fit: inherit;
+}
+
+.info {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    flex: 1;
+    padding-left: 20px;
+    padding: 20px;
+}
+
+.booking-summary {
+    width: 300px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.booking-summary h5,
+.booking-summary p {
+    margin-bottom: 15px;
+}
+
+.total {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.btn-finalize {
+    display: block;
+    width: 100%;
+}
