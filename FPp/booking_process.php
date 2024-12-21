@@ -118,18 +118,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     </script>
 </head>
-
-<body>
+<body style="background: url('img/image.jpg') no-repeat center center; background-size: cover; box-shadow: 0 4px 8px rgba(0, 0, 0, 1); min-height: 300px;">
 <div class="container-fluid justify-content-center align-items-center vh-100">
     <div class="container">
-        <h1 class="text-center mt-4">Proses Booking Mobil</h1>
+        <div class="justify-content-center align-items-center col-12">
+            <h1 class="text-center mt-4" style="color:white"><strong>Proses Booking Mobil</strong></h1>
+        </div>
         <form method="POST">
-            <div class="booking-container row justify-content-center">
+            <div class="booking-container row justify-content-center" style="border-radius: 50px;">
                 <!-- Informasi Mobil -->
-                <div class="card align-items-center">
-                    <img src="<?= $mobil['mobil_foto']; ?>" class="card-img-top mt-3 mb-3" alt="<?= $mobil['merek']; ?>">
+                <div class="card align-items-center" style="border-radius: 50px;">
+                    <img src="<?= $mobil['mobil_foto']; ?>" class="card-img-top mt-3 mb-3" alt="<?= $mobil['merek']; ?>" >
                 </div>
-                <div class="info col-md-6 col-sm-12 mb-3">
+                <div class="info col-md-6 col-sm-12 mb-3" style="border-radius: 50px;">
                     <h2><?= $mobil['merek'] . ' ' . $mobil['model']; ?></h2>
                     <p><strong>Kapasitas Penumpang:</strong> <?= $mobil['kapasitas_penumpang']; ?></p>
                     <p><strong>Tahun Produksi:</strong> <?= $mobil['tahun_produksi']; ?></p>
@@ -141,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <!-- Ringkasan Booking -->
-                <div class="booking-summary col-md-8 col-sm-12 mb-3">
+                <div class="booking-summary col-md-8 col-sm-12 mb-3" style="border-radius: 50px;">
                     <label>Tanggal Mulai</label>
                     <input type="text" name="tanggal_mulai" id="tanggal_mulai" class="form-control mb-3" placeholder="Masukkan tanggal mulai" required>
 
@@ -167,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <p class="mt-3 mb-3" id="harga_total">Rp 0</p>
                     <button type="submit" class="btn btn-success col-12">Booking</button>
-                    <a href="index.php" class="btn btn-danger mt-1 col-12">Kembali</a>
+                    <a href="booking.php" class="btn btn-danger mt-1 col-12">Kembali</a>
                 </div>
             </div>
         </form>

@@ -21,8 +21,8 @@ include 'fungsi/db.php';
         include('includes/header.php');
     }
     ?>
-    <div class="container ">
-        <h1 class="text-center">Booking Mobil</h1>
+    <div class="container mt-5 ">
+        <h1 class="text-center mt-5">Booking Mobil</h1>
         <p class="text-center">Pilih mobil yang Anda inginkan dan lakukan pemesanan.</p>
         <?php include('includes/cardsection.php'); ?>
     </div>

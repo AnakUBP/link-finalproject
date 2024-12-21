@@ -36,12 +36,8 @@ $result_pemesanan = $conn->query($sql_pemesanan);
 <body>
   <?php include 'includes/header.php'; ?>
   
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-      </div>
+  <div class="container row justify-content-center">
       <div class="col-md-9">
-        <h3>halo <?php echo $user['nama_pengguna']; ?></h3>
         <div class="card">
           <div class="card-header">
             <h5>Profil Pengguna</h5>
