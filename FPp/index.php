@@ -1,41 +1,6 @@
 <?php
 session_start();
 include 'fungsi/db.php';
-
-// Update status otomatis
-$current_date = date('Y-m-d');
-
-$conn->query("
-    UPDATE list_pemesanan 
-    JOIN rental_pemesanan
-    SET status = 'batal' 
-    WHERE status = 'belum bayar' AND DATE_ADD(tanggal_pemesanan, INTERVAL 1 DAY) < '$current_date'
-");
-
-// Update status 'sudah bayar' menjadi 'berlangsung' jika sudah mencapai tanggal mulai
-$conn->query("
-    UPDATE list_pemesanan lp
-    JOIN rental_pemesanan rp ON lp.id_pemesanan = rp.id_pemesanan
-    SET lp.status = 'berlangsung'
-    WHERE lp.status = 'sudah bayar' AND rp.tanggal_mulai <= '$current_date'
-");
-
-// Update status 'berlangsung' menjadi 'selesai' jika sudah melewati tanggal berakhir
-$conn->query("
-    UPDATE list_pemesanan lp
-    JOIN rental_pemesanan rp ON lp.id_pemesanan = rp.id_pemesanan
-    SET lp.status = 'selesai'
-    WHERE lp.status = 'berlangsung' AND rp.tanggal_berakhir < '$current_date'
-");
-
-// Update status mobil menjadi 'tersedia' jika status pemesanan adalah 'selesai' atau 'batal'
-$conn->query("
-    UPDATE mobil m
-    JOIN rental_pemesanan rp ON m.id_mobil = rp.id_mobil
-    JOIN list_pemesanan lp ON rp.id_pemesanan = lp.id_pemesanan
-    SET m.status = 'tersedia'
-    WHERE lp.status IN ('selesai', 'batal')
-");
 ?>
 
 <!DOCTYPE html>
@@ -53,111 +18,110 @@ $conn->query("
     integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
+
 <body>
 
-<?php
+  <?php
   if (!isset($_SESSION['id_akun'])) {
     include('includes/headera.php');
-?>
-<div class="container mb-5 col-10 d-flex flex-column justify-content-center align-items-center" 
-     style="background: url('img/image.jpg') no-repeat center center; background-size: cover; 
+  ?>
+    <div class="container mb-5 col-10 d-flex flex-column justify-content-center align-items-center"
+      style="background: url('img/image.jpg') no-repeat center center; background-size: cover; 
             box-shadow: 0 4px 8px rgba(0, 0, 0, 1); min-height: 300px;">
-  <h2 class="card text-center mt-3 mb-3" style="background-color: rgba(0,0,0, 0.5); color:whitesmoke; border-radius: 10px">Selamat Datang di Buroq Rental Mobil</h2>
-  <p class="text-center mt-2 mb-4" style=" color:whitesmoke">Silakan login atau daftar untuk menggunakan layanan kami.</p>
+      <h2 class="card text-center mt-3 mb-3" style="background-color: rgba(0,0,0, 0.5); color:whitesmoke; border-radius: 10px">Selamat Datang di Buroq Rental Mobil</h2>
+      <p class="text-center mt-2 mb-4" style=" color:whitesmoke">Silakan login atau daftar untuk menggunakan layanan kami.</p>
 
-  <div class="d-flex justify-content-center gap-5">
-    <a href="login.php" class="btn btn-primary mx-1">Login</a>
-    <a href="register.php" class="btn btn-secondary mx-1">Daftar</a>
-  </div>
-</div>
+      <div class="d-flex justify-content-center gap-5">
+        <a href="login.php" class="btn btn-primary mx-1">Login</a>
+        <a href="register.php" class="btn btn-secondary mx-1">Daftar</a>
+      </div>
+    </div>
 
-<?php
+  <?php
   } else {
     include('includes/header.php');
     $id_akun = $_SESSION['id_akun'];
-$sql_user = "
+    // Ambil data user
+    $sql_user = "
     SELECT akun.nama_pengguna, pelanggan.id_pelanggan 
     FROM akun 
     JOIN pelanggan ON akun.id_akun = pelanggan.id_akun 
     WHERE akun.id_akun = '$id_akun'
-";
-$result_user = $conn->query($sql_user);
-$user = $result_user->fetch_assoc();
-$id_pelanggan = $user['id_pelanggan'];
+    ";
+    $result_user = $conn->query($sql_user);
+    $user = $result_user->fetch_assoc();
+    $id_pelanggan = $user['id_pelanggan'];
 
-// Ambil riwayat pemesanan
-$sql_pemesanan = "
-SELECT rp.id_pemesanan, rp.tanggal_pemesanan, rp.tanggal_mulai, rp.tanggal_berakhir,
-       m.merek, m.model, m.harga_sewa, lp.status
-FROM rental_pemesanan rp
-JOIN list_pemesanan lp ON rp.id_pemesanan = lp.id_pemesanan
-JOIN mobil m ON rp.id_mobil = m.id_mobil
-WHERE lp.status IN ('belum bayar', 'sudah bayar', 'berlangsung')
-";
+    // Ambil riwayat pemesanan
+    $sql_pemesanan = "
+    SELECT rp.id_pemesanan, rp.tanggal_pemesanan, rp.tanggal_mulai, rp.tanggal_berakhir,
+           m.merek, m.model, m.harga_sewa, lp.status
+    FROM rental_pemesanan rp
+    JOIN list_pemesanan lp ON rp.id_pemesanan = lp.id_pemesanan
+    JOIN mobil m ON rp.id_mobil = m.id_mobil
+    WHERE lp.status IN ('belum bayar', 'sudah bayar', 'berlangsung')
+    ";
+    $result_pemesanan = $conn->query($sql_pemesanan);
+  ?>
 
-$result_pemesanan = $conn->query($sql_pemesanan);
-?>
-<div class="container mb-5"></div>
-<div class="container mt-5">
-    <h2 class="text-center">hello, <?php echo $user['nama_pengguna']; ?></h2>
-</div>
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-8">
+    <div class="container" style=" margin-top: 80px; ">
+      <h2 class="text-center">Hello, <?php echo htmlspecialchars($user['nama_pengguna']); ?></h2>
     </div>
-    <div class="col-md-9">
+    <div class="container mt-4">
       <div class="card">
         <div class="card-header">
           <h2 class="text-center">List Pemesanan</h2>
         </div>
         <?php if ($result_pemesanan->num_rows > 0): ?>
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                <?php while ($pemesanan = $result_pemesanan->fetch_assoc()): ?>
-                    <div class="col">
-                        <div class="card">
-                          <div class="card align-items-center">
-                            <div class="card-body">
-                                <h5 class="card-title"><?php echo $pemesanan['merek'] . " " . $pemesanan['model']; ?></h5>
-                                <p class="card-text">
-                                    <strong>Tanggal Pemesanan:</strong> <?php echo $pemesanan['tanggal_pemesanan']; ?><br>
-                                    <strong>Tanggal Mulai:</strong> <?php echo $pemesanan['tanggal_mulai']; ?><br>
-                                    <strong>Tanggal Berakhir:</strong> <?php echo $pemesanan['tanggal_berakhir']; ?><br>
-                                    <strong>Harga Sewa:</strong> Rp<?php echo number_format($pemesanan['harga_sewa'], 0, ',', '.'); ?><br>
-                                    <strong>Status:</strong> <?php echo $pemesanan['status']; ?>
-                                </p>
-                            </div>
-                            <div class="card-footer d-flex justify-content-between align-items-center">
-                                <p class="mt-3">Klik Tombol ini untuk melihat detail dan melanjutkan pembayaran</p>
-                                <a href="detail_pemesanan.php?id_pemesanan=<?php echo $pemesanan['id_pemesanan']; ?>" class="btn btn-primary btn-sm col-3">Lihat Detail</a>
-                            </div>
-                        </div>
+          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <?php while ($pemesanan = $result_pemesanan->fetch_assoc()): ?>
+              <div class="col-12">
+                <div class="card">
+                  <div class="card align-items-center">
+                    <div class="card-body">
+                      <h5 class="card-title"><?php echo htmlspecialchars($pemesanan['merek'] . " " . $pemesanan['model']); ?></h5>
+                      <p class="card-text">
+                        <strong>Tanggal Pemesanan:</strong> <?php echo htmlspecialchars($pemesanan['tanggal_pemesanan']); ?><br>
+                        <strong>Tanggal Mulai:</strong> <?php echo htmlspecialchars($pemesanan['tanggal_mulai']); ?><br>
+                        <strong>Tanggal Berakhir:</strong> <?php echo htmlspecialchars($pemesanan['tanggal_berakhir']); ?><br>
+                        <strong>Harga Sewa:</strong> Rp<?php echo number_format($pemesanan['harga_sewa'], 0, ',', '.'); ?><br>
+                        <strong>Status:</strong> <?php echo htmlspecialchars($pemesanan['status']); ?>
+                      </p>
                     </div>
-                <?php endwhile; ?>
-            </div>
-        <?php else: ?>
-            <p class="text-center">Tidak ada riwayat pemesanan.</p>
-        <?php endif; ?>
+                    <div class="card-footer d-flex justify-content-between align-items-center">
+                      <p class="mt-3">Klik tombol ini untuk melihat detail dan melanjutkan pembayaran</p>
+                      <a href="detail_pemesanan.php?id_pemesanan=<?php echo $pemesanan['id_pemesanan']; ?>" class="btn btn-primary btn-sm col-3">Lihat Detail</a>
+                    </div>
+                  </div>
+                </div>
+              <?php endwhile; ?>
+              </div>
+            <?php else: ?>
+              <p class="text-center mt-5 mb-5">Tidak ada riwayat pemesanan.</p>
+            <?php endif; ?>
+          </div>
+      </div>
+      <div class="text-center mt-5">
+        <a href="booking.php" class="btn btn-primary">Buat Pemesanan Baru</a>
+      </div>
     </div>
-  </div>
-  <div class="text-center mt-5">
-    <a href="booking.php" class="btn btn-primary">Buat Pemesanan Baru</a>
-  </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
 <?php
   }
 ?>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
 
 <!-- Features Section -->
 <div class="container-fluid mb-5">
   <div id="featuresCarousel" class="carousel slide justify-content-center" data-bs-ride="carousel">
-    <div class="carousel-inner text-center mt-5" >
+    <div class="carousel-inner text-center mt-5">
       <div class="carousel-item active">
         <i class="fas fa-bolt fa-3x mb-2"></i>
         <h3>Fast</h3>
@@ -195,7 +159,8 @@ $result_pemesanan = $conn->query($sql_pemesanan);
 </div>
 
 <?php
-  include ('includes/footer.php')
+include('includes/footer.php')
 ?>
 </body>
+
 </html>

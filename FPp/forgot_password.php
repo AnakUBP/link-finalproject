@@ -30,9 +30,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ganti Password</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/cyborg/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<div class="container mt-5">
+<div class="container mt-5" style="max-width: 600px; margin: 50px auto; margin-top: 90px; background: #ffffff; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px; padding: 20px">
     <h2 class="text-center">Ganti Password</h2>
     <?php if ($error): ?>
         <div class="alert alert-danger"><?php echo $error; ?></div>
