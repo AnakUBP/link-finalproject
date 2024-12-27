@@ -1,5 +1,5 @@
 <?php
-include 'database/db.php';
+include 'fungsi/db.php';
 session_start();
 
 $error = "";

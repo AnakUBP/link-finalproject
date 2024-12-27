@@ -1,5 +1,5 @@
 <head>
-<meta charset="UTF-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>footer</title>
   <link rel="stylesheet" href="./css/style.css">
@@ -11,19 +11,18 @@
     crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
-    <footer>
-        <div class="container text-center mt-5 mb-0">
-            <p>&copy; 2024 Buroq Transport. All Rights Reserved.</p>
-            <div class="social-icons mt-3">
-            <a href="https://web.facebook.com/syandila.syandila.56/"><i class="fab fa-facebook"></i></a>
-            <a href="#" class="mx-2"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="mx-2"><i class="fab fa-instagram"></i></a>
-            <a href="https://www.tiktok.com/@albedo1128?lang=id-ID"><i class="fab fa-tiktok"></i></a>
-            </div>
-        </div>
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" href="./css/style.css">
-    </footer>
-
+<footer>
+  <div class="container text-center mt-5 mb-0">
+    <p>&copy; 2024 Buroq Transport. All Rights Reserved.</p>
+    <div class="social-icons mt-3">
+      <a href="https://web.facebook.com/syandila.syandila.56/"><i class="fab fa-facebook"></i></a>
+      <a href="#" class="mx-2"><i class="fab fa-twitter"></i></a>
+      <a href="#" class="mx-2"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.tiktok.com/@albedo1128?lang=id-ID"><i class="fab fa-tiktok"></i></a>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="./css/style.css">
+</footer>

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'database/db.php'; // File konfigurasi koneksi database
+require 'fungsi/db.php'; // File konfigurasi koneksi database
 
 // Periksa apakah pengguna sudah login
 if (!isset($_SESSION['id_akun']) || !isset($_SESSION['peran'])) {
@@ -15,31 +15,18 @@ if ($peran !== 'admin' && $peran !== 'super admin') {
     exit();
 }
 
-// Query untuk mengambil penghasilan per bulan
-$query = "
-    SELECT 
-        DATE_FORMAT(tanggal_pemesanan, '%Y-%m') AS bulan,
-        SUM(harga_total) AS total_penghasilan
-    FROM rental_pemesanan
-    GROUP BY bulan
-    ORDER BY bulan ASC
+// Query untuk mendapatkan data pemesanan
+$sql_pemesanan = "
+SELECT rp.id_pemesanan, rp.tanggal_pemesanan, rp.tanggal_mulai, rp.tanggal_berakhir,
+       m.merek, m.model, m.harga_sewa, m.mobil_foto, lp.status, p.nama_lengkap
+FROM rental_pemesanan rp
+JOIN list_pemesanan lp ON rp.id_pemesanan = lp.id_pemesanan
+JOIN mobil m ON rp.id_mobil = m.id_mobil
+JOIN pelanggan p ON rp.id_pelanggan = p.id_pelanggan
+WHERE lp.status IN ('belum bayar', 'sudah bayar', 'berlangsung')
 ";
 
-$result = $conn->query($query);
-
-$bulan = [];
-$penghasilan = [];
-
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $bulan[] = $row['bulan']; // Contoh: '2024-01'
-        $penghasilan[] = $row['total_penghasilan'];
-    }
-}
-
-// Konversi data ke format JSON untuk Chart.js
-$bulan_json = json_encode($bulan);
-$penghasilan_json = json_encode($penghasilan);
+$result_pemesanan = $conn->query($sql_pemesanan);
 ?>
 
 <!DOCTYPE html>
@@ -51,71 +38,60 @@ $penghasilan_json = json_encode($penghasilan);
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Dashboard Admin</title>
     <link rel="stylesheet" href="../contrast-bootstrap-pro/css/bootstrap.min.css" />
-    <script src="../contrast-bootstrap-pro/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<?php
-include('include/sidebar.php')
-?>
 
 <body style="background-color:whitesmoke">
+
+    <!-- Include Sidebar -->
+    <?php include('include/sidebar.php'); ?>
+
     <div id="main-content">
         <h1 class="text-center" style="color:black">Dashboard Admin</h1>
         <p class="text-center">Selamat datang, <strong><?= htmlspecialchars($_SESSION['nama_pengguna']); ?></strong>. Anda login sebagai <strong><?= htmlspecialchars($_SESSION['peran']); ?></strong>.</p>
-
-        <div class="row">
-            <div class="col-lg-12 mt-4">
-                <div class="card">
-                    <div class="card-header">
-                        Grafik Penghasilan Bulanan
-                    </div>
-                    <div class="card-body">
-                        <canvas id="penghasilanChart" width="400" height="200"></canvas>
-                    </div>
+        <div class="container mt-4">
+            <div class="card">
+                <div class="card-header" style=" background-color:orange">
+                    <h2 class="text-center">List Pemesanan</h2>
                 </div>
+                <?php if ($result_pemesanan->num_rows > 0): ?>
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                        <?php while ($pemesanan = $result_pemesanan->fetch_assoc()): ?>
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card align-items-center">
+                                        <div class="card-body">
+                                            <!-- Image of the car -->
+                                            <img src="../img/mobil/<?= htmlspecialchars($pemesanan['mobil_foto']); ?>" class="card-img-top" alt="<?= htmlspecialchars($pemesanan['merek']); ?>">
+                                            <h5 class="card-title"><?php echo htmlspecialchars($pemesanan['merek'] . " " . $pemesanan['model']); ?></h5>
+                                            <p class="card-text">
+                                                <strong>nama pemesan</strong> <?php echo htmlspecialchars($pemesanan['nama_lengkap']); ?><br>
+                                                <strong>Tanggal Pemesanan:</strong> <?php echo htmlspecialchars($pemesanan['tanggal_pemesanan']); ?><br>
+                                                <strong>Tanggal Mulai:</strong> <?php echo htmlspecialchars($pemesanan['tanggal_mulai']); ?><br>
+                                                <strong>Tanggal Berakhir:</strong> <?php echo htmlspecialchars($pemesanan['tanggal_berakhir']); ?><br>
+                                                <strong>Harga Sewa:</strong> Rp<?php echo number_format($pemesanan['harga_sewa'], 0, ',', '.'); ?><br>
+                                                <strong>Status:</strong> <?php echo htmlspecialchars($pemesanan['status']); ?>
+                                            </p>
+                                        </div>
+                                        <div class="card-footer d-flex justify-content-between align-items-center">
+                                            <a href="edit_pemesanan.php?id_pemesanan=<?php echo $pemesanan['id_pemesanan']; ?>" class="btn btn-warning btn-sm col-12">Edit</a>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endwhile; ?>
+                    </div>
+                <?php else: ?>
+                    <p class="text-center mt-5 mb-5">Tidak ada riwayat pemesanan.</p>
+                <?php endif; ?>
             </div>
         </div>
     </div>
 
-    <script>
-        // Kode JavaScript untuk Chart.js (seperti sebelumnya)
-        const bulan = <?php echo $bulan_json; ?>;
-        const penghasilan = <?php echo $penghasilan_json; ?>;
-
-        const ctx = document.getElementById('penghasilanChart').getContext('2d');
-        const penghasilanChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: bulan,
-                datasets: [{
-                    label: 'Penghasilan Bulanan (Rp)',
-                    data: penghasilan,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Penghasilan (Rp)'
-                        }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Bulan'
-                        }
-                    }
-                }
-            }
-        });
-    </script>
+    <!-- JavaScript Files -->
+    <script src="../contrast-bootstrap-pro/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 
 </html>

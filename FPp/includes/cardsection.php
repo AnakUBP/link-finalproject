@@ -6,8 +6,10 @@ $sql = "
     SELECT m.*, k.nama_kategori, k.jangkauan_kapasitas_penumpang
     FROM mobil m
     INNER JOIN kategori_mobil k ON m.id_kategori = k.id_kategori
+    WHERE m.status != 'berakhir'
     ORDER BY k.nama_kategori, m.merek
 ";
+
 $result = $conn->query($sql);
 ?>
 
@@ -31,7 +33,7 @@ $result = $conn->query($sql);
 <!-- Card untuk setiap mobil -->
 <div class="col-lg-4">
     <div class="card mb-4">
-        <img src="img/<?= $row['mobil_foto']; ?>" class="card-img-top" alt="<?= $row['merek']; ?>">
+        <img src="../img/mobil/<?= $row['mobil_foto']; ?>" class="card-img-top" alt="<?= $row['merek']; ?>">
         <div class="card-body">
             <h5 class="card-title"><i class="fas fa-car"></i> <?= $row['merek'] . ' ' . $row['model']; ?></h5>
             <p class="card-text">
@@ -54,6 +56,7 @@ $result = $conn->query($sql);
         </div>
     </div>
 </div>
+
 <?php endwhile; ?>
 </div> <!-- Tutup row terakhir -->
 <?php else: ?>

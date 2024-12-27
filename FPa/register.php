@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'database/db.php'; // File konfigurasi database
+require 'fungsi/db.php'; // File konfigurasi database
 
 // Periksa apakah pengguna sudah login dan perannya super admin
 

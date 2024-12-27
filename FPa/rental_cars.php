@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'database/db.php'; // File konfigurasi koneksi database
+require 'fungsi/db.php'; // File konfigurasi koneksi database
 
 // Periksa apakah pengguna sudah login
 if (!isset($_SESSION['id_akun']) || !isset($_SESSION['peran'])) {
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $harga_sewa = $_POST['harga_sewa'];
 
     // Mengupload file gambar mobil
-    $target_dir = "uploads/mobil/";
+    $target_dir = "../img/mobil/";
     $target_file = $target_dir . basename($_FILES["mobil_foto"]["name"]);
     $uploadOk = 1;
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
@@ -105,9 +105,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rental Mobil</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Dashboard Admin</title>
+  <link rel="stylesheet" href="../contrast-bootstrap-pro/css/bootstrap.min.css" />
+  <script src="../contrast-bootstrap-pro/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="css/style.css">
   <script>
     function toggleForm(formType) {
       if (formType === 'kategori') {
@@ -128,9 +131,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   </script>
 </head>
-<?php include('include/sidebar.php') ?>
+
 
 <body>
+  <?php include('include/sidebar.php') ?>
   <div class="container mt-5">
     <h1 class="text-center">Rental Mobil</h1>
 
@@ -212,34 +216,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </form>
     </div>
     <div id="mobilList" style="display:none; margin-top: 30px;">
-      <h3 class="text-center mb-4">Daftar Mobil</h3>
-      <div class="container">
-        <div class="row">
-          <?php
-          // Ambil data mobil
-          $result = $conn->query("SELECT * FROM mobil INNER JOIN kategori_mobil ON mobil.id_kategori = kategori_mobil.id_kategori");
-          while ($row = $result->fetch_assoc()) {
-          ?>
-            <div class="col-md-6 col-lg-4 mb-4"> <!-- Responsif untuk ukuran layar -->
-              <div class="card shadow-sm h-100"> <!-- Tambahkan shadow dan full height -->
-                <img src="img/<?= $row['mobil_foto']; ?>" class="card-img-top" alt="Foto Mobil" style="height: 200px; object-fit: cover;"> <!-- Foto mobil -->
-                <div class="card-body d-flex flex-column">
-                  <h5 class="card-title"><?= $row['merek'] . ' - ' . $row['model']; ?></h5>
-                  <p class="card-text"><strong>Kategori:</strong> <?= $row['nama_kategori']; ?></p>
-                  <p class="card-text"><strong>Plat Nomor:</strong> <?= $row['plat_nomor']; ?></p>
-                  <p class="card-text"><strong>Tahun Produksi:</strong> <?= $row['tahun_produksi']; ?></p>
-                  <p class="card-text"><strong>Warna:</strong> <?= $row['warna']; ?></p>
-                  <p class="card-text"><strong>Kapasitas Penumpang:</strong> <?= $row['kapasitas_penumpang']; ?> orang</p>
-                  <p class="card-text"><strong>Harga Sewa:</strong> Rp <?= number_format($row['harga_sewa'], 0, ',', '.'); ?> /hari</p>
-                </div>
-              </div>
-            </div>
-          <?php
-          }
-          ?>
-        </div>
+      <?php
+      // Query utama untuk mengambil mobil dengan kategori
+      $sql = "
+        SELECT m.*, k.nama_kategori, k.jangkauan_kapasitas_penumpang
+        FROM mobil m
+        LEFT JOIN kategori_mobil k ON m.id_kategori = k.id_kategori
+        ORDER BY k.nama_kategori IS NULL, k.nama_kategori, m.merek
+    ";
+      $result = $conn->query($sql);
+      ?>
+      <?php
+      if ($result && $result->num_rows > 0):
+        $current_category = null;
+        while ($row = $result->fetch_assoc()):
+          // Kategori lainnya untuk id_kategori NULL
+          $category_name = $row['nama_kategori'] ?? 'Kategori Lainnya';
+          $capacity_range = $row['jangkauan_kapasitas_penumpang'] ?? 'Tidak Ditentukan';
+
+          if ($current_category !== $category_name):
+            if ($current_category !== null): ?>
+    </div> <!-- Tutup row sebelumnya -->
+  <?php endif; ?>
+  <h3 class="mt-5 d-flex justify-content-between align-items-center">
+    <div>
+      <?= $category_name; ?>
+      <small class="text-muted">(<?= $capacity_range; ?>)</small>
+    </div>
+    <?php if ($row['id_kategori']): ?>
+      <!-- Tombol Edit dan Hapus Kategori -->
+      <div>
+        <a href="./edit_kategori.php?id_kategori=<?= $row['id_kategori']; ?>" class="btn btn-primary btn-sm">
+          <i class="fas fa-edit"></i> Edit
+        </a>
+        <a href="./delete_kategori.php?id_kategori=<?= $row['id_kategori']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus kategori ini?')">
+          <i class="fas fa-trash"></i> Hapus
+        </a>
+      </div>
+    <?php endif; ?>
+  </h3>
+  <div class="row">
+    <?php $current_category = $category_name; ?>
+  <?php endif; ?>
+
+  <!-- Card untuk setiap mobil -->
+  <div class="col-lg-4">
+    <div class="card mb-4">
+      <img src="../img/mobil/<?= $row['mobil_foto']; ?>" class="card-img-top" alt="<?= $row['merek']; ?>">
+      <div class="card-body">
+        <h5 class="card-title"><i class="fas fa-car"></i> <?= $row['merek'] . ' ' . $row['model']; ?></h5>
+        <p class="card-text">
+          <strong>Plat Nomor:</strong> <?= $row['plat_nomor']; ?><br>
+          <strong>Tahun:</strong> <?= $row['tahun_produksi']; ?><br>
+          <strong>Warna:</strong> <?= $row['warna']; ?><br>
+          <strong>Kapasitas Penumpang:</strong> <?= $row['kapasitas_penumpang']; ?> orang<br>
+          <strong>Harga Sewa:</strong> Rp <?= number_format($row['harga_sewa'], 2, ',', '.'); ?><br>
+          <strong>Status:</strong> <?= ucfirst($row['status']); ?>
+        </p>
+        <!-- Tombol Edit dan Hapus Mobil -->
+        <a href="./edit_mobil.php?id_mobil=<?= $row['id_mobil']; ?>" class="btn btn-warning">
+          <i class="fas fa-edit"></i> Edit
+        </a>
+        <a href="./delete_mobil.php?id_mobil=<?= $row['id_mobil']; ?>" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus mobil ini? (mobil akan terhapus secara permanen jika status mobil berada pada berakhir)')">
+          <i class="fas fa-trash"></i> berakhir/hapus
+        </a>
       </div>
     </div>
+  </div>
+<?php endwhile; ?>
+  </div> <!-- Tutup row terakhir -->
+<?php endif; ?>
+  </div>
+
+
+  </div>
+  </div>
+  </div>
 
   </div>
 </body>

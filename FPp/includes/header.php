@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,23 +22,23 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-            <a class="nav-link" href="index.php"><i class="fas fa-house"></i> Home</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fas fa-info-circle"></i> About</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="booking.php"><i class="fas fa-calendar"></i> Booking</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="profile.php"><i class="fas fa-user"></i> Profile</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="./logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
-            </li>
-        </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="index.php"><i class="fas fa-house"></i> Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"><i class="fas fa-info-circle"></i> About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="booking.php"><i class="fas fa-calendar"></i> Booking</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="profile.php"><i class="fas fa-user"></i> Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="./logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
+      </ul>
     </div>
   </nav>
 </header>

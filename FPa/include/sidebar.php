@@ -9,9 +9,10 @@
 </head>
 <div class="sidebar">
     <h3 class="text-center text-light py-3" style="background-color:orange;">Admin Dashboard</h3>
-    <a href="./dashboard_admin.php"><i class="fas fa-home"></i> Home</a>
-    <a href="manage_users.php"><i class="fas fa-users"></i> mengelola user</a>
-    <a href="reports.php"><i class="fas fa-chart-bar"></i> laporan keuangan</a>
-    <a href="rental_cars.php"><i class="fas fa-car"></i> rental mobil</a>
+    <a href="./dashboard_admin.php"><i class="fas fa-home"></i> home</a>
+    <a href="./manage_workers.php"><i class="fas fa-users"></i> manage worker</a>
+    <a href="manage_users.php"><i class="fas fa-users"></i> manage user</a>
+    <a href="reports.php"><i class="fas fa-chart-bar"></i> reports</a>
+    <a href="rental_cars.php"><i class="fas fa-car"></i> rental cars</a>
     <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
 </div>

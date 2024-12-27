@@ -118,102 +118,109 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     </script>
 </head>
-<body style="background: url('img/image.jpg') no-repeat center center; background-size: cover; box-shadow: 0 4px 8px rgba(0, 0, 0, 1); min-height: 300px;">
-<div class="container-fluid justify-content-center align-items-center vh-100">
-    <div class="container">
-        <div class="justify-content-center align-items-center col-12">
-            <h1 class="text-center mt-4" style="color:white"><strong>Proses Booking Mobil</strong></h1>
-        </div>
-        <form method="POST">
-            <div class="booking-container row justify-content-center" style="border-radius: 50px;">
-                <!-- Informasi Mobil -->
-                <div class="card align-items-center" style="border-radius: 50px;">
-                    <img src="<?= $mobil['mobil_foto']; ?>" class="card-img-top mt-3 mb-3" alt="<?= $mobil['merek']; ?>" >
-                </div>
-                <div class="info col-md-6 col-sm-12 mb-3" style="border-radius: 50px;">
-                    <h2><?= $mobil['merek'] . ' ' . $mobil['model']; ?></h2>
-                    <p><strong>Kapasitas Penumpang:</strong> <?= $mobil['kapasitas_penumpang']; ?></p>
-                    <p><strong>Tahun Produksi:</strong> <?= $mobil['tahun_produksi']; ?></p>
-                    <p><strong>Warna:</strong> <?= $mobil['warna']; ?></p>
-                    <p><strong>Harga Sewa:</strong> Rp <?= number_format($mobil['harga_sewa'], 2, ',', '.'); ?>/Hari</p>
-                    <a><strong>deskripsi:</strong>
-                        <p><?= $mobil['deskripsi'] ?></p>
-                    </a>
-                </div>
 
-                <!-- Ringkasan Booking -->
-                <div class="booking-summary col-md-8 col-sm-12 mb-3" style="border-radius: 50px;">
-                    <label>Tanggal Mulai</label>
-                    <input type="text" name="tanggal_mulai" id="tanggal_mulai" class="form-control mb-3" placeholder="Masukkan tanggal mulai" required>
-
-                    <label>Tanggal Berakhir</label>
-                    <input type="text" name="tanggal_berakhir" id="tanggal_berakhir" class="form-control mb-3" placeholder="Masukkan tanggal berakhir" required>
-
-                    <label>Alamat Tujuan</label>
-                    <input type="text" name="alamat_tujuan" class="form-control mb-3" placeholder="Masukkan alamat tujuan" required>
-
-                    <label>Tujuan Rental</label>
-                    <select name="tujuan_rental" class="form-select" onchange="toggleLainnya(this.value)" required>
-                        <option value="wisata">Wisata</option>
-                        <option value="keperluan bisnis">Keperluan Bisnis</option>
-                        <option value="pernikahan">Pernikahan</option>
-                        <option value="pesta">Pesta</option>
-                        <option value="lainnya">Lainnya</option>
-                    </select>
-
-                    <div id="tujuan_rental_lainnya_container" style="display: none;">
-                        <label>Tuliskan Tujuan</label>
-                        <input type="text" name="tujuan_rental_lainnya" class="form-control">
+<body style="background: url('../img/image.jpg') no-repeat center center; background-size: cover; box-shadow: 0 4px 8px rgba(0, 0, 0, 1); min-height: 300px;">
+    <div class="container-fluid justify-content-center align-items-center vh-100">
+        <div class="container">
+            <div class="justify-content-center align-items-center col-12">
+                <h1 class="text-center mt-4" style="color:white"><strong>Proses Booking Mobil</strong></h1>
+            </div>
+            <form method="POST">
+                <div class="booking-container row justify-content-center" style="border-radius: 50px;">
+                    <!-- Informasi Mobil -->
+                    <div class="card align-items-center" style="border-radius: 50px;">
+                        <img src="../img/mobil/<?= $mobil['mobil_foto']; ?>" class="card-img-top mt-3 mb-3" alt="<?= $mobil['merek']; ?>">
+                    </div>
+                    <div class="info col-md-6 col-sm-12 mb-3" style="border-radius: 50px;">
+                        <h2><?= $mobil['merek'] . ' ' . $mobil['model']; ?></h2>
+                        <p><strong>Kapasitas Penumpang:</strong> <?= $mobil['kapasitas_penumpang']; ?></p>
+                        <p><strong>Tahun Produksi:</strong> <?= $mobil['tahun_produksi']; ?></p>
+                        <p><strong>Warna:</strong> <?= $mobil['warna']; ?></p>
+                        <p><strong>Harga Sewa:</strong> Rp <?= number_format($mobil['harga_sewa'], 2, ',', '.'); ?>/Hari</p>
+                        <a><strong>deskripsi:</strong>
+                            <p><?= $mobil['deskripsi'] ?></p>
+                        </a>
                     </div>
 
-                    <p class="mt-3 mb-3" id="harga_total">Rp 0</p>
-                    <button type="submit" class="btn btn-success col-12">Booking</button>
-                    <a href="booking.php" class="btn btn-danger mt-1 col-12">Kembali</a>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
+                    <!-- Ringkasan Booking -->
+                    <div class="booking-summary col-md-8 col-sm-12 mb-3" style="border-radius: 50px;">
+                        <label>Tanggal Mulai</label>
+                        <input type="text" name="tanggal_mulai" id="tanggal_mulai" class="form-control mb-3" placeholder="Masukkan tanggal mulai" required>
 
-<!-- Modal Pop-up Booking Sukses -->
-<div class="modal fade" id="bookingSuccessModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Booking Sukses!</h5>
-            </div>
-            <div class="modal-body">
-                Terima kasih, booking mobil Anda telah berhasil! Anda akan diarahkan ke halaman utama.
+                        <label>Tanggal Berakhir</label>
+                        <input type="text" name="tanggal_berakhir" id="tanggal_berakhir" class="form-control mb-3" placeholder="Masukkan tanggal berakhir" required>
+
+                        <label>Alamat Tujuan</label>
+                        <input type="text" name="alamat_tujuan" class="form-control mb-3" placeholder="Masukkan alamat tujuan" required>
+
+                        <label>Tujuan Rental</label>
+                        <select name="tujuan_rental" class="form-select" onchange="toggleLainnya(this.value)" required>
+                            <option value="wisata">Wisata</option>
+                            <option value="keperluan bisnis">Keperluan Bisnis</option>
+                            <option value="pernikahan">Pernikahan</option>
+                            <option value="pesta">Pesta</option>
+                            <option value="lainnya">Lainnya</option>
+                        </select>
+
+                        <div id="tujuan_rental_lainnya_container" style="display: none;">
+                            <label>Tuliskan Tujuan</label>
+                            <input type="text" name="tujuan_rental_lainnya" class="form-control">
+                        </div>
+
+                        <p class="mt-3 mb-3" id="harga_total">Rp 0</p>
+                        <button type="submit" class="btn btn-success col-12">Booking</button>
+                        <a href="booking.php" class="btn btn-danger mt-1 col-12">Kembali</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Pop-up Booking Sukses -->
+    <div class="modal fade" id="bookingSuccessModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Booking Sukses!</h5>
+                </div>
+                <div class="modal-body">
+                    Terima kasih, booking mobil Anda telah berhasil! Anda akan diarahkan ke halaman utama.
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script>
-    flatpickr("#tanggal_mulai", { dateFormat: "Y-m-d", minDate: "today" });
-    flatpickr("#tanggal_berakhir", { dateFormat: "Y-m-d", minDate: "today" });
-
-    const hargaSewa = <?= $mobil['harga_sewa']; ?>;
-
-    document.querySelectorAll("#tanggal_mulai, #tanggal_berakhir").forEach(input => {
-        input.addEventListener("change", () => {
-            const mulai = new Date(document.getElementById("tanggal_mulai").value);
-            const berakhir = new Date(document.getElementById("tanggal_berakhir").value);
-            if (mulai < berakhir) {
-                const durasi = (berakhir - mulai) / (1000 * 60 * 60 * 24);
-                document.getElementById("harga_total").innerText = `Rp ${(durasi * hargaSewa).toLocaleString()}`;
-            }
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        flatpickr("#tanggal_mulai", {
+            dateFormat: "Y-m-d",
+            minDate: "today"
         });
-    });
+        flatpickr("#tanggal_berakhir", {
+            dateFormat: "Y-m-d",
+            minDate: "today"
+        });
 
-    <?php if ($bookingSukses): ?>
-        var bookingModal = new bootstrap.Modal(document.getElementById('bookingSuccessModal'));
-        bookingModal.show();
-        setTimeout(() => window.location.href = 'index.php', 3000);
-    <?php endif; ?>
-</script>
+        const hargaSewa = <?= $mobil['harga_sewa']; ?>;
+
+        document.querySelectorAll("#tanggal_mulai, #tanggal_berakhir").forEach(input => {
+            input.addEventListener("change", () => {
+                const mulai = new Date(document.getElementById("tanggal_mulai").value);
+                const berakhir = new Date(document.getElementById("tanggal_berakhir").value);
+                if (mulai < berakhir) {
+                    const durasi = (berakhir - mulai) / (1000 * 60 * 60 * 24);
+                    document.getElementById("harga_total").innerText = `Rp ${(durasi * hargaSewa).toLocaleString()}`;
+                }
+            });
+        });
+
+        <?php if ($bookingSukses): ?>
+            var bookingModal = new bootstrap.Modal(document.getElementById('bookingSuccessModal'));
+            bookingModal.show();
+            setTimeout(() => window.location.href = 'index.php', 3000);
+        <?php endif; ?>
+    </script>
 </body>
 
 </html>

@@ -26,7 +26,7 @@ include 'fungsi/db.php';
     include('includes/headera.php');
   ?>
     <div class="container mb-5 col-10 d-flex flex-column justify-content-center align-items-center"
-      style="background: url('img/image.jpg') no-repeat center center; background-size: cover; 
+      style="background: url('../img/image.jpg') no-repeat center center; background-size: cover; 
             box-shadow: 0 4px 8px rgba(0, 0, 0, 1); min-height: 300px;">
       <h2 class="card text-center mt-3 mb-3" style="background-color: rgba(0,0,0, 0.5); color:whitesmoke; border-radius: 10px">Selamat Datang di Buroq Rental Mobil</h2>
       <p class="text-center mt-2 mb-4" style=" color:whitesmoke">Silakan login atau daftar untuk menggunakan layanan kami.</p>
@@ -55,7 +55,7 @@ include 'fungsi/db.php';
     // Ambil riwayat pemesanan
     $sql_pemesanan = "
     SELECT rp.id_pemesanan, rp.tanggal_pemesanan, rp.tanggal_mulai, rp.tanggal_berakhir,
-           m.merek, m.model, m.harga_sewa, lp.status
+           m.merek, m.model, m.harga_sewa,m.mobil_foto, lp.status
     FROM rental_pemesanan rp
     JOIN list_pemesanan lp ON rp.id_pemesanan = lp.id_pemesanan
     JOIN mobil m ON rp.id_mobil = m.id_mobil
@@ -79,6 +79,7 @@ include 'fungsi/db.php';
                 <div class="card">
                   <div class="card align-items-center">
                     <div class="card-body">
+                      <img src="../img/mobil/<?= htmlspecialchars($pemesanan['mobil_foto']); ?>" class="card-img-top" alt="<?= htmlspecialchars($pemesanan['merek']); ?>">
                       <h5 class="card-title"><?php echo htmlspecialchars($pemesanan['merek'] . " " . $pemesanan['model']); ?></h5>
                       <p class="card-text">
                         <strong>Tanggal Pemesanan:</strong> <?php echo htmlspecialchars($pemesanan['tanggal_pemesanan']); ?><br>
@@ -107,60 +108,53 @@ include 'fungsi/db.php';
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
-<?php
+  <?php
   }
-?>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+  ?>
 
-</html>
-
-<!-- Features Section -->
-<div class="container-fluid mb-5">
-  <div id="featuresCarousel" class="carousel slide justify-content-center" data-bs-ride="carousel">
-    <div class="carousel-inner text-center mt-5">
-      <div class="carousel-item active">
-        <i class="fas fa-bolt fa-3x mb-2"></i>
-        <h3>Fast</h3>
-        <p>Our services are optimized for speed and efficiency.</p>
+  <!-- Features Section -->
+  <div class="container-fluid mb-5">
+    <div id="featuresCarousel" class="carousel slide justify-content-center" data-bs-ride="carousel">
+      <div class="carousel-inner text-center mt-5">
+        <div class="carousel-item active">
+          <i class="fas fa-bolt fa-3x mb-2"></i>
+          <h3>Fast</h3>
+          <p>Our services are optimized for speed and efficiency.</p>
+        </div>
+        <div class="carousel-item">
+          <i class="fas fa-shield-alt fa-3x mb-2"></i>
+          <h3>Secure</h3>
+          <p>We use the latest security technologies to keep your data safe.</p>
+        </div>
+        <div class="carousel-item">
+          <i class="fas fa-users fa-3x mb-2"></i>
+          <h3>Support</h3>
+          <p>Our team is here to help you 24/7 with any issues.</p>
+        </div>
       </div>
-      <div class="carousel-item">
-        <i class="fas fa-shield-alt fa-3x mb-2"></i>
-        <h3>Secure</h3>
-        <p>We use the latest security technologies to keep your data safe.</p>
-      </div>
-      <div class="carousel-item">
-        <i class="fas fa-users fa-3x mb-2"></i>
-        <h3>Support</h3>
-        <p>Our team is here to help you 24/7 with any issues.</p>
-      </div>
-    </div>
 
-    <!-- Carousel controls -->
-    <button class="carousel-control-prev " type="button" data-bs-target="#featuresCarousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#featuresCarousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
+      <!-- Carousel controls -->
+      <button class="carousel-control-prev " type="button" data-bs-target="#featuresCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#featuresCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
 
-    <!-- Carousel indicators -->
-    <div class="carousel-indicators">
-      <button type="button" data-bs-target="#featuresCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-      <button type="button" data-bs-target="#featuresCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-      <button type="button" data-bs-target="#featuresCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      <!-- Carousel indicators -->
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#featuresCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#featuresCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#featuresCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      </div>
     </div>
   </div>
-</div>
 
-<?php
-include('includes/footer.php')
-?>
+  <?php
+  include('includes/footer.php')
+  ?>
 </body>
 
 </html>
